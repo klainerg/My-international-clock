@@ -1,7 +1,5 @@
-// My International Clock - Service Worker
-// Requires HTTPS (GitHub Pages is fine).
-
-const CACHE_NAME = "my-international-clock-v3";
+// My International Clock - Service Worker (v4)
+const CACHE_NAME = "my-international-clock-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -28,7 +26,6 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-
   event.respondWith(
     caches.match(req).then(cached => {
       if (cached) return cached;

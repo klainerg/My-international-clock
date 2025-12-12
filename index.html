@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>International Clocks</title>
+<title>My International Clock</title>
 
 <meta name="theme-color" content="#000000" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -25,17 +25,14 @@
       #000;
   }
   .safe { padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
-  .wrap{ max-width: 520px; margin: 0 auto; padding: 14px 14px 22px; }
+  .wrap{ max-width: 560px; margin: 0 auto; padding: 14px 14px 22px; }
+
   .topbar{
-    display:flex; align-items:flex-end; justify-content:space-between;
-    margin: 10px 2px 14px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    margin: 10px 2px 12px;
   }
-  .title{
-    font-size: 1.45rem; font-weight: 720; letter-spacing: .2px;
-  }
-  .subtitle{
-    font-size: .82rem; opacity:.72; margin-top:4px;
-  }
+  .title{ font-size: 1.45rem; font-weight: 760; letter-spacing: .2px; }
+  .subtitle{ font-size: .82rem; opacity:.72; margin-top:4px; }
   .chip{
     font-size:.78rem;
     padding: 7px 10px;
@@ -45,7 +42,45 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity:.9;
+    white-space: nowrap;
   }
+
+  .panel{
+    border-radius: 20px;
+    padding: 12px 12px 10px;
+    margin-bottom: 12px;
+    background: rgba(18,18,18,.58);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 14px 40px rgba(0,0,0,.40);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .panelTitle{ font-size: .95rem; font-weight: 650; }
+  .panelSub{ font-size:.78rem; opacity:.65; margin-top:4px; line-height:1.35; }
+  .controls{
+    margin-top: 10px;
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+  }
+  button{
+    appearance:none;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.07);
+    color:#fff;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size:.92rem;
+    font-weight: 650;
+  }
+  button:active{ transform: scale(.99); }
+  .delta{
+    flex: 1 1 140px;
+    text-align:center;
+    font-variant-numeric: tabular-nums;
+    font-size: .92rem;
+    opacity: .92;
+  }
+  .rangeWrap{ flex: 2 1 260px; width: 100%; }
+  input[type="range"]{ width: 100%; }
 
   .grid{ display:grid; gap: 12px; }
   .card{
@@ -73,18 +108,15 @@
   .time{
     margin-top: 10px;
     font-size: 2.55rem;
-    font-weight: 800;
+    font-weight: 820;
     letter-spacing: 2px;
     font-variant-numeric: tabular-nums;
   }
   .date{ margin-top: 6px; font-size: .85rem; opacity:.70; }
   .small{ font-size:.8rem; opacity:.70; }
 
-  .picker{
-    margin-top: 6px;
-    display:flex; gap:10px; flex-wrap:wrap;
-  }
-  select, input{
+  .picker{ margin-top: 6px; display:flex; gap:10px; flex-wrap:wrap; }
+  select, input[type="text"]{
     appearance: none;
     background: rgba(255,255,255,.06);
     border: 1px solid rgba(255,255,255,.12);
@@ -114,7 +146,6 @@
     font-size: .78rem;
     opacity: .55;
   }
-  a{ color: inherit; }
 </style>
 </head>
 
@@ -123,14 +154,36 @@
   <div class="wrap">
     <div class="topbar">
       <div>
-        <div class="title">International Clocks</div>
-        <div class="subtitle">Israel • Ciudad Juárez • Irvine • Custom</div>
+        <div class="title">My International Clock</div>
+        <div class="subtitle">Developer: <b>GuyK</b></div>
       </div>
-      <div class="chip" id="status">Updating…</div>
+      <div class="chip" id="status">Live</div>
+    </div>
+
+    <div class="panel">
+      <div class="panelTitle">Israel time offset</div>
+      <div class="panelSub">
+        Use this to move the Israel clock forward/backward. All other clocks update according to the shifted Israel time (useful for planning calls).
+      </div>
+      <div class="controls">
+        <button id="minus1h" type="button">−1h</button>
+        <button id="minus15" type="button">−15m</button>
+
+        <div class="delta" id="deltaLabel">Offset: +00:00</div>
+
+        <button id="plus15" type="button">+15m</button>
+        <button id="plus1h" type="button">+1h</button>
+        <button id="reset" type="button">Reset</button>
+
+        <div class="rangeWrap">
+          <input id="range" type="range" min="-720" max="720" step="5" value="0" />
+          <div class="panelSub" style="margin-top:6px;">Range: −12h … +12h (step 5 minutes)</div>
+        </div>
+      </div>
     </div>
 
     <div class="grid">
-      <div class="card" data-tz="Asia/Jerusalem" data-name="Israel (Local)">
+      <div class="card">
         <div class="row">
           <div class="city">Israel (Local)</div>
           <div class="small" id="dn-il">—</div>
@@ -143,7 +196,7 @@
         <div class="date" id="d-il">---</div>
       </div>
 
-      <div class="card" data-tz="America/Ciudad_Juarez" data-name="Ciudad Juárez, Mexico">
+      <div class="card">
         <div class="row">
           <div class="city">Ciudad Juárez, Mexico</div>
           <div class="small" id="dn-juarez">—</div>
@@ -156,7 +209,7 @@
         <div class="date" id="d-juarez">---</div>
       </div>
 
-      <div class="card" data-tz="America/Los_Angeles" data-name="Irvine, CA, USA">
+      <div class="card">
         <div class="row">
           <div class="city">Irvine, CA, USA</div>
           <div class="small" id="dn-irvine">—</div>
@@ -187,33 +240,27 @@
               <option value="Europe/Berlin">Berlin</option>
               <option value="Europe/Rome">Rome</option>
               <option value="Europe/Athens">Athens</option>
-              <option value="Europe/Moscow">Moscow</option>
               <option value="America/New_York">New York</option>
               <option value="America/Chicago">Chicago</option>
               <option value="America/Denver">Denver</option>
               <option value="America/Los_Angeles">Los Angeles</option>
               <option value="America/Mexico_City">Mexico City</option>
-              <option value="America/Vancouver">Vancouver</option>
               <option value="Asia/Dubai">Dubai</option>
-              <option value="Asia/Riyadh">Riyadh</option>
               <option value="Asia/Kolkata">India (Kolkata)</option>
-              <option value="Asia/Bangkok">Bangkok</option>
-              <option value="Asia/Shanghai">Shanghai</option>
               <option value="Asia/Tokyo">Tokyo</option>
               <option value="Australia/Sydney">Sydney</option>
-              <option value="Pacific/Auckland">Auckland</option>
               <option value="custom">Custom time zone…</option>
             </select>
           </div>
           <div class="inputWrap">
-            <input id="custom-input" placeholder="e.g., America/Toronto (IANA time zone)" inputmode="text" />
+            <input id="custom-input" type="text" placeholder="e.g., America/Toronto (IANA time zone)" />
           </div>
         </div>
 
         <div class="time" id="t-custom">--:--:--</div>
         <div class="date" id="d-custom">---</div>
         <div class="hint">
-          Pick a city or enter an IANA time zone (e.g., <b>America/Toronto</b>, <b>Asia/Singapore</b>). Your choice is saved on this device.
+          Pick a city or enter an IANA time zone (e.g., <b>America/Toronto</b>, <b>Asia/Singapore</b>). Saved on this device.
         </div>
       </div>
     </div>
@@ -241,10 +288,8 @@
 
   const dayNight = (hour) => (hour >= 6 && hour < 18) ? "☀️ Day" : "🌙 Night";
 
-  // Offset vs Israel, in minutes (supports half/quarter-hour zones).
+  // Offset of a timezone at 'now', in minutes. Handles DST and non-integer offsets.
   const tzOffsetMinutes = (tz, now) => {
-    // Convert "now" to a string that represents the same *wall clock* in tz,
-    // then interpret that string as UTC; the difference gives offset.
     const parts = new Intl.DateTimeFormat("en-US", {
       timeZone: tz,
       year: "numeric", month: "2-digit", day: "2-digit",
@@ -265,8 +310,29 @@
     const hours = Math.floor(abs / 60);
     const mins = abs % 60;
     if (mins === 0) return `${sign}${hours}h vs Israel`;
-    const mm = String(mins).padStart(2, "0");
-    return `${sign}${hours}:${mm} vs Israel`;
+    return `${sign}${hours}:${String(mins).padStart(2,"0")} vs Israel`;
+  };
+
+  // --- Israel shift controls (minutes) ---
+  const KEY_SHIFT = "il_shift_minutes";
+  let shiftMin = parseInt(localStorage.getItem(KEY_SHIFT) || "0", 10);
+  if (!Number.isFinite(shiftMin)) shiftMin = 0;
+
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const setShift = (v) => {
+    shiftMin = clamp(v, -720, 720);
+    localStorage.setItem(KEY_SHIFT, String(shiftMin));
+    range.value = String(shiftMin);
+    deltaLabel.textContent = "Offset: " + formatHM(shiftMin);
+    status.textContent = "Live";
+  };
+
+  const formatHM = (min) => {
+    const sign = min >= 0 ? "+" : "-";
+    const a = Math.abs(min);
+    const h = Math.floor(a / 60);
+    const m = a % 60;
+    return `${sign}${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
   };
 
   // --- Custom city selection ---
@@ -279,46 +345,39 @@
     localStorage.setItem("custom_tz", tz);
     localStorage.setItem("custom_label", label || tz);
   };
-
   const loadCustom = () => {
     const tz = localStorage.getItem("custom_tz");
     const label = localStorage.getItem("custom_label");
     return { tz, label };
   };
-
   const setCustom = (tz, label) => {
     window.__CUSTOM_TZ__ = tz;
     customTitle.textContent = label || "Custom City";
     tzCustomLabel.textContent = tz || "—";
   };
-
   const trySetCustomTZ = (tz, label) => {
-    // Validate by attempting to format
     try {
       new Intl.DateTimeFormat("en-US", { timeZone: tz }).format(new Date());
       setCustom(tz, label);
       saveCustom(tz, label);
-      document.getElementById("status").textContent = "Saved";
-      setTimeout(()=>document.getElementById("status").textContent="Live", 800);
+      status.textContent = "Saved";
+      setTimeout(()=>status.textContent="Live", 700);
       return true;
-    } catch (e) {
-      document.getElementById("status").textContent = "Invalid time zone";
-      setTimeout(()=>document.getElementById("status").textContent="Live", 1200);
+    } catch {
+      status.textContent = "Invalid time zone";
+      setTimeout(()=>status.textContent="Live", 1200);
       return false;
     }
   };
 
-  // Initialize custom
   (function initCustom(){
     const saved = loadCustom();
     if (saved.tz) {
       setCustom(saved.tz, saved.label || saved.tz);
-      // Set select to saved if it exists in list
       const opt = [...selectEl.options].find(o => o.value === saved.tz);
-      if (opt) selectEl.value = saved.tz; else selectEl.value = "custom";
+      selectEl.value = opt ? saved.tz : "custom";
       inputEl.value = saved.tz;
     } else {
-      // default: London
       selectEl.value = "Europe/London";
       inputEl.value = "";
       trySetCustomTZ("Europe/London", "London");
@@ -345,32 +404,49 @@
     }
   });
 
-  // --- Clocks update ---
-  const fixed = [
-    { t:"t-il",     d:"d-il",     dn:"dn-il",     off:"off-il",     tz:TZ_IL },
-    { t:"t-juarez", d:"d-juarez", dn:"dn-juarez", off:"off-juarez", tz:"America/Ciudad_Juarez" },
-    { t:"t-irvine", d:"d-irvine", dn:"dn-irvine", off:"off-irvine", tz:"America/Los_Angeles" }
-  ];
+  // --- Hook controls ---
+  const status = document.getElementById("status");
+  const deltaLabel = document.getElementById("deltaLabel");
+  const range = document.getElementById("range");
 
+  document.getElementById("minus1h").addEventListener("click", ()=> setShift(shiftMin - 60));
+  document.getElementById("plus1h").addEventListener("click", ()=> setShift(shiftMin + 60));
+  document.getElementById("minus15").addEventListener("click", ()=> setShift(shiftMin - 15));
+  document.getElementById("plus15").addEventListener("click", ()=> setShift(shiftMin + 15));
+  document.getElementById("reset").addEventListener("click", ()=> setShift(0));
+  range.addEventListener("input", ()=> { status.textContent = "Live"; setShift(parseInt(range.value,10)); });
+
+  // Init label/slider
+  range.value = String(shiftMin);
+  deltaLabel.textContent = "Offset: " + formatHM(shiftMin);
+
+  // --- Clocks update ---
   function updateAll(){
-    const now = new Date();
+    const realNow = new Date();
+    const now = new Date(realNow.getTime() + shiftMin * 60000); // shifted Israel reference time
+
+    // Offsets vs Israel should use the same shifted instant (still valid for planning)
     const ilOff = tzOffsetMinutes(TZ_IL, now);
 
-    // Israel baseline
-    document.getElementById("off-il").textContent = "Base";
-
-    fixed.slice(1).forEach(c => {
-      document.getElementById(c.t).textContent = fmtTime(c.tz, now);
-      document.getElementById(c.d).textContent = fmtDate(c.tz, now);
-      document.getElementById(c.dn).textContent = dayNight(getHour(c.tz, now));
-      const diff = tzOffsetMinutes(c.tz, now) - ilOff;
-      document.getElementById(c.off).textContent = formatDiff(diff);
-    });
-
-    // Israel itself
+    // Israel
     document.getElementById("t-il").textContent = fmtTime(TZ_IL, now);
     document.getElementById("d-il").textContent = fmtDate(TZ_IL, now);
     document.getElementById("dn-il").textContent = dayNight(getHour(TZ_IL, now));
+    document.getElementById("off-il").textContent = shiftMin === 0 ? "Base" : ("Shift " + formatHM(shiftMin));
+
+    // Juarez
+    const tzJ = "America/Ciudad_Juarez";
+    document.getElementById("t-juarez").textContent = fmtTime(tzJ, now);
+    document.getElementById("d-juarez").textContent = fmtDate(tzJ, now);
+    document.getElementById("dn-juarez").textContent = dayNight(getHour(tzJ, now));
+    document.getElementById("off-juarez").textContent = formatDiff(tzOffsetMinutes(tzJ, now) - ilOff);
+
+    // Irvine
+    const tzI = "America/Los_Angeles";
+    document.getElementById("t-irvine").textContent = fmtTime(tzI, now);
+    document.getElementById("d-irvine").textContent = fmtDate(tzI, now);
+    document.getElementById("dn-irvine").textContent = dayNight(getHour(tzI, now));
+    document.getElementById("off-irvine").textContent = formatDiff(tzOffsetMinutes(tzI, now) - ilOff);
 
     // Custom
     const ctz = window.__CUSTOM_TZ__;
@@ -378,10 +454,8 @@
       document.getElementById("t-custom").textContent = fmtTime(ctz, now);
       document.getElementById("d-custom").textContent = fmtDate(ctz, now);
       document.getElementById("dn-custom").textContent = dayNight(getHour(ctz, now));
-      const diff = tzOffsetMinutes(ctz, now) - ilOff;
-      document.getElementById("off-custom").textContent = formatDiff(diff);
+      document.getElementById("off-custom").textContent = formatDiff(tzOffsetMinutes(ctz, now) - ilOff);
     }
-    document.getElementById("status").textContent = "Live";
   }
 
   updateAll();

@@ -1,7 +1,7 @@
 {
   "name": "My International Clock",
   "short_name": "Clocks",
-  "description": "International clocks with day/night and offsets",
+  "description": "International clocks (day/night, offsets, custom city, Israel time shift)",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
