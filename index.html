@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111111" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Clocks" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <title>World Clocks</title>
+</head>
+<body>
+<h2>Live World Clocks</h2>
+<div id="app"></div>
+
+<script>
+const zones=[
+{n:"Israel",tz:"Asia/Jerusalem"},
+{n:"Ciudad Juárez",tz:"America/Ciudad_Juarez"},
+{n:"Irvine, CA",tz:"America/Los_Angeles"}
+];
+function tick(){
+ document.getElementById("app").innerHTML = zones.map(z=>{
+  const t=new Intl.DateTimeFormat("en-GB",{timeZone:z.tz,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(new Date());
+  return `<p><b>${z.n}</b>: ${t}</p>`;
+ }).join("");
+}
+tick(); setInterval(tick,1000);
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js");}
+</script>
+</body>
+</html>
