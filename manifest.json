@@ -1,8 +1,9 @@
 {
-  "name": "World Clocks",
+  "name": "My International Clock",
   "short_name": "Clocks",
-  "description": "Live world clocks",
+  "description": "International clocks with day/night and offsets",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",

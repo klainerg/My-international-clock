@@ -1,134 +1,396 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live World Clocks</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>International Clocks</title>
 
-<meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="World Clocks">
+<meta name="theme-color" content="#000000" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Clocks" />
 
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="manifest" href="./manifest.json" />
+<link rel="apple-touch-icon" href="./icon-192.png" />
 
 <style>
-:root { color-scheme: dark; }
-body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-.wrapper {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 16px;
-}
-h1 {
-  font-size: 1.4rem;
-  margin-bottom: 16px;
-}
-.card {
-  background: #121212;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
-}
-.city {
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-.tz {
-  font-size: .8rem;
-  opacity: .75;
-  margin-bottom: 10px;
-}
-.time {
-  font-size: 2.4rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-variant-numeric: tabular-nums;
-}
-.date {
-  margin-top: 6px;
-  font-size: .85rem;
-  opacity: .7;
-}
-.footer {
-  margin-top: 20px;
-  font-size: .75rem;
-  opacity: .6;
-  text-align: center;
-}
+  :root { color-scheme: dark; }
+  body{
+    margin:0;
+    color:#fff;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display","SF Pro Text", system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    background:
+      radial-gradient(900px 600px at 20% 10%, rgba(120,180,255,.22), transparent 55%),
+      radial-gradient(900px 700px at 85% 30%, rgba(255,120,200,.16), transparent 60%),
+      radial-gradient(700px 700px at 50% 95%, rgba(120,255,200,.12), transparent 55%),
+      #000;
+  }
+  .safe { padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+  .wrap{ max-width: 520px; margin: 0 auto; padding: 14px 14px 22px; }
+  .topbar{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    margin: 10px 2px 14px;
+  }
+  .title{
+    font-size: 1.45rem; font-weight: 720; letter-spacing: .2px;
+  }
+  .subtitle{
+    font-size: .82rem; opacity:.72; margin-top:4px;
+  }
+  .chip{
+    font-size:.78rem;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity:.9;
+  }
+
+  .grid{ display:grid; gap: 12px; }
+  .card{
+    border-radius: 20px;
+    padding: 14px 14px 12px;
+    background: rgba(18,18,18,.62);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 14px 40px rgba(0,0,0,.45);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .city{ font-size: 1.02rem; font-weight: 650; }
+  .meta{
+    font-size: .78rem; opacity:.72; margin-top:4px;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+  .time{
+    margin-top: 10px;
+    font-size: 2.55rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .date{ margin-top: 6px; font-size: .85rem; opacity:.70; }
+  .small{ font-size:.8rem; opacity:.70; }
+
+  .picker{
+    margin-top: 6px;
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  select, input{
+    appearance: none;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    color:#fff;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-size: .92rem;
+    outline: none;
+    width: 100%;
+  }
+  select{ padding-right: 34px; }
+  .selectWrap{ position:relative; flex: 1 1 220px; }
+  .selectWrap:after{
+    content:"▾";
+    position:absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    opacity: .7;
+    pointer-events:none;
+  }
+  .inputWrap{ flex: 2 1 220px; }
+  .hint{ margin-top: 8px; font-size:.78rem; opacity:.60; line-height:1.35; }
+
+  .footer{
+    text-align:center;
+    margin-top: 14px;
+    font-size: .78rem;
+    opacity: .55;
+  }
+  a{ color: inherit; }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-  <h1>Live World Clocks</h1>
+<div class="safe">
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <div class="title">International Clocks</div>
+        <div class="subtitle">Israel • Ciudad Juárez • Irvine • Custom</div>
+      </div>
+      <div class="chip" id="status">Updating…</div>
+    </div>
 
-  <div class="card">
-    <div class="city">Israel (Local)</div>
-    <div class="tz">Time zone: Asia/Jerusalem</div>
-    <div class="time" id="t-il">--:--:--</div>
-    <div class="date" id="d-il">---</div>
-  </div>
+    <div class="grid">
+      <div class="card" data-tz="Asia/Jerusalem" data-name="Israel (Local)">
+        <div class="row">
+          <div class="city">Israel (Local)</div>
+          <div class="small" id="dn-il">—</div>
+        </div>
+        <div class="meta">
+          <span class="pill">🕓 <span id="off-il">Base</span></span>
+          <span class="pill">🌍 <span>Asia/Jerusalem</span></span>
+        </div>
+        <div class="time" id="t-il">--:--:--</div>
+        <div class="date" id="d-il">---</div>
+      </div>
 
-  <div class="card">
-    <div class="city">Ciudad Juárez, Mexico</div>
-    <div class="tz">Time zone: America/Ciudad_Juarez</div>
-    <div class="time" id="t-juarez">--:--:--</div>
-    <div class="date" id="d-juarez">---</div>
-  </div>
+      <div class="card" data-tz="America/Ciudad_Juarez" data-name="Ciudad Juárez, Mexico">
+        <div class="row">
+          <div class="city">Ciudad Juárez, Mexico</div>
+          <div class="small" id="dn-juarez">—</div>
+        </div>
+        <div class="meta">
+          <span class="pill">🕓 <span id="off-juarez">—</span></span>
+          <span class="pill">🌍 <span>America/Ciudad_Juarez</span></span>
+        </div>
+        <div class="time" id="t-juarez">--:--:--</div>
+        <div class="date" id="d-juarez">---</div>
+      </div>
 
-  <div class="card">
-    <div class="city">Irvine, CA, USA</div>
-    <div class="tz">Time zone: America/Los_Angeles</div>
-    <div class="time" id="t-irvine">--:--:--</div>
-    <div class="date" id="d-irvine">---</div>
-  </div>
+      <div class="card" data-tz="America/Los_Angeles" data-name="Irvine, CA, USA">
+        <div class="row">
+          <div class="city">Irvine, CA, USA</div>
+          <div class="small" id="dn-irvine">—</div>
+        </div>
+        <div class="meta">
+          <span class="pill">🕓 <span id="off-irvine">—</span></span>
+          <span class="pill">🌍 <span>America/Los_Angeles</span></span>
+        </div>
+        <div class="time" id="t-irvine">--:--:--</div>
+        <div class="date" id="d-irvine">---</div>
+      </div>
 
-  <div class="footer">
-    Updates every second
+      <div class="card">
+        <div class="row">
+          <div class="city" id="custom-title">Custom City</div>
+          <div class="small" id="dn-custom">—</div>
+        </div>
+        <div class="meta">
+          <span class="pill">🕓 <span id="off-custom">—</span></span>
+          <span class="pill">🌍 <span id="tz-custom-label">—</span></span>
+        </div>
+
+        <div class="picker">
+          <div class="selectWrap">
+            <select id="custom-select" aria-label="Choose a city">
+              <option value="Europe/London">London</option>
+              <option value="Europe/Paris">Paris</option>
+              <option value="Europe/Berlin">Berlin</option>
+              <option value="Europe/Rome">Rome</option>
+              <option value="Europe/Athens">Athens</option>
+              <option value="Europe/Moscow">Moscow</option>
+              <option value="America/New_York">New York</option>
+              <option value="America/Chicago">Chicago</option>
+              <option value="America/Denver">Denver</option>
+              <option value="America/Los_Angeles">Los Angeles</option>
+              <option value="America/Mexico_City">Mexico City</option>
+              <option value="America/Vancouver">Vancouver</option>
+              <option value="Asia/Dubai">Dubai</option>
+              <option value="Asia/Riyadh">Riyadh</option>
+              <option value="Asia/Kolkata">India (Kolkata)</option>
+              <option value="Asia/Bangkok">Bangkok</option>
+              <option value="Asia/Shanghai">Shanghai</option>
+              <option value="Asia/Tokyo">Tokyo</option>
+              <option value="Australia/Sydney">Sydney</option>
+              <option value="Pacific/Auckland">Auckland</option>
+              <option value="custom">Custom time zone…</option>
+            </select>
+          </div>
+          <div class="inputWrap">
+            <input id="custom-input" placeholder="e.g., America/Toronto (IANA time zone)" inputmode="text" />
+          </div>
+        </div>
+
+        <div class="time" id="t-custom">--:--:--</div>
+        <div class="date" id="d-custom">---</div>
+        <div class="hint">
+          Pick a city or enter an IANA time zone (e.g., <b>America/Toronto</b>, <b>Asia/Singapore</b>). Your choice is saved on this device.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">Day/Night is based on local hour (06:00–17:59 = day).</div>
   </div>
 </div>
 
 <script>
-const clocks = [
-  { t: "t-il", d: "d-il", tz: "Asia/Jerusalem" },
-  { t: "t-juarez", d: "d-juarez", tz: "America/Ciudad_Juarez" },
-  { t: "t-irvine", d: "d-irvine", tz: "America/Los_Angeles" }
-];
+  const TZ_IL = "Asia/Jerusalem";
 
-function update() {
-  const now = new Date();
-  clocks.forEach(c => {
-    document.getElementById(c.t).textContent =
-      new Intl.DateTimeFormat("en-GB", {
-        timeZone: c.tz,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hourCycle: "h23"
-      }).format(now);
+  const fmtTime = (tz, now) => new Intl.DateTimeFormat("en-GB", {
+    timeZone: tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+  }).format(now);
 
-    document.getElementById(c.d).textContent =
-      new Intl.DateTimeFormat("en-US", {
-        timeZone: c.tz,
-        weekday: "long",
-        month: "short",
-        day: "2-digit"
-      }).format(now);
+  const fmtDate = (tz, now) => new Intl.DateTimeFormat("en-US", {
+    timeZone: tz, weekday: "long", month: "short", day: "2-digit"
+  }).format(now);
+
+  const getHour = (tz, now) => {
+    const s = new Intl.DateTimeFormat("en-GB", { timeZone: tz, hour: "2-digit", hourCycle: "h23" }).format(now);
+    const h = parseInt(s, 10);
+    return Number.isFinite(h) ? h : 0;
+  };
+
+  const dayNight = (hour) => (hour >= 6 && hour < 18) ? "☀️ Day" : "🌙 Night";
+
+  // Offset vs Israel, in minutes (supports half/quarter-hour zones).
+  const tzOffsetMinutes = (tz, now) => {
+    // Convert "now" to a string that represents the same *wall clock* in tz,
+    // then interpret that string as UTC; the difference gives offset.
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(now);
+    const get = (type) => parts.find(p => p.type === type)?.value;
+    const y = get("year"), mo = get("month"), d = get("day"),
+          h = get("hour"), mi = get("minute"), s = get("second");
+    const asUTC = Date.UTC(+y, +mo - 1, +d, +h, +mi, +s);
+    return Math.round((asUTC - now.getTime()) / 60000);
+  };
+
+  const formatDiff = (diffMin) => {
+    if (diffMin === 0) return "Same as Israel";
+    const sign = diffMin > 0 ? "+" : "-";
+    const abs = Math.abs(diffMin);
+    const hours = Math.floor(abs / 60);
+    const mins = abs % 60;
+    if (mins === 0) return `${sign}${hours}h vs Israel`;
+    const mm = String(mins).padStart(2, "0");
+    return `${sign}${hours}:${mm} vs Israel`;
+  };
+
+  // --- Custom city selection ---
+  const selectEl = document.getElementById("custom-select");
+  const inputEl  = document.getElementById("custom-input");
+  const customTitle = document.getElementById("custom-title");
+  const tzCustomLabel = document.getElementById("tz-custom-label");
+
+  const saveCustom = (tz, label) => {
+    localStorage.setItem("custom_tz", tz);
+    localStorage.setItem("custom_label", label || tz);
+  };
+
+  const loadCustom = () => {
+    const tz = localStorage.getItem("custom_tz");
+    const label = localStorage.getItem("custom_label");
+    return { tz, label };
+  };
+
+  const setCustom = (tz, label) => {
+    window.__CUSTOM_TZ__ = tz;
+    customTitle.textContent = label || "Custom City";
+    tzCustomLabel.textContent = tz || "—";
+  };
+
+  const trySetCustomTZ = (tz, label) => {
+    // Validate by attempting to format
+    try {
+      new Intl.DateTimeFormat("en-US", { timeZone: tz }).format(new Date());
+      setCustom(tz, label);
+      saveCustom(tz, label);
+      document.getElementById("status").textContent = "Saved";
+      setTimeout(()=>document.getElementById("status").textContent="Live", 800);
+      return true;
+    } catch (e) {
+      document.getElementById("status").textContent = "Invalid time zone";
+      setTimeout(()=>document.getElementById("status").textContent="Live", 1200);
+      return false;
+    }
+  };
+
+  // Initialize custom
+  (function initCustom(){
+    const saved = loadCustom();
+    if (saved.tz) {
+      setCustom(saved.tz, saved.label || saved.tz);
+      // Set select to saved if it exists in list
+      const opt = [...selectEl.options].find(o => o.value === saved.tz);
+      if (opt) selectEl.value = saved.tz; else selectEl.value = "custom";
+      inputEl.value = saved.tz;
+    } else {
+      // default: London
+      selectEl.value = "Europe/London";
+      inputEl.value = "";
+      trySetCustomTZ("Europe/London", "London");
+    }
+    inputEl.style.display = (selectEl.value === "custom") ? "block" : "none";
+  })();
+
+  selectEl.addEventListener("change", () => {
+    if (selectEl.value === "custom") {
+      inputEl.style.display = "block";
+      inputEl.focus();
+      return;
+    }
+    inputEl.style.display = "none";
+    const label = selectEl.options[selectEl.selectedIndex].textContent || "Custom City";
+    trySetCustomTZ(selectEl.value, label);
   });
-}
 
-update();
-setInterval(update, 1000);
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const tz = inputEl.value.trim();
+      if (tz) trySetCustomTZ(tz, tz);
+      inputEl.blur();
+    }
+  });
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
-}
+  // --- Clocks update ---
+  const fixed = [
+    { t:"t-il",     d:"d-il",     dn:"dn-il",     off:"off-il",     tz:TZ_IL },
+    { t:"t-juarez", d:"d-juarez", dn:"dn-juarez", off:"off-juarez", tz:"America/Ciudad_Juarez" },
+    { t:"t-irvine", d:"d-irvine", dn:"dn-irvine", off:"off-irvine", tz:"America/Los_Angeles" }
+  ];
+
+  function updateAll(){
+    const now = new Date();
+    const ilOff = tzOffsetMinutes(TZ_IL, now);
+
+    // Israel baseline
+    document.getElementById("off-il").textContent = "Base";
+
+    fixed.slice(1).forEach(c => {
+      document.getElementById(c.t).textContent = fmtTime(c.tz, now);
+      document.getElementById(c.d).textContent = fmtDate(c.tz, now);
+      document.getElementById(c.dn).textContent = dayNight(getHour(c.tz, now));
+      const diff = tzOffsetMinutes(c.tz, now) - ilOff;
+      document.getElementById(c.off).textContent = formatDiff(diff);
+    });
+
+    // Israel itself
+    document.getElementById("t-il").textContent = fmtTime(TZ_IL, now);
+    document.getElementById("d-il").textContent = fmtDate(TZ_IL, now);
+    document.getElementById("dn-il").textContent = dayNight(getHour(TZ_IL, now));
+
+    // Custom
+    const ctz = window.__CUSTOM_TZ__;
+    if (ctz) {
+      document.getElementById("t-custom").textContent = fmtTime(ctz, now);
+      document.getElementById("d-custom").textContent = fmtDate(ctz, now);
+      document.getElementById("dn-custom").textContent = dayNight(getHour(ctz, now));
+      const diff = tzOffsetMinutes(ctz, now) - ilOff;
+      document.getElementById("off-custom").textContent = formatDiff(diff);
+    }
+    document.getElementById("status").textContent = "Live";
+  }
+
+  updateAll();
+  setInterval(updateAll, 1000);
+
+  // PWA service worker (HTTPS required)
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
 </script>
 </body>
 </html>
